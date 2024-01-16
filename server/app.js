@@ -24,14 +24,21 @@ io.on("connection", (socket) => {
   //   socket.emit("welcome", `Welcome to the server with.`);
   //   socket.broadcast.emit("welcome", `${socket.id} joined the server.`);
 
-  socket.on("message", (data) => {
-    console.log(data);
+  // socket.on("message", (data) => {
+  socket.on("message", ({ message, Room }) => {
+    console.log({ message, Room });
     // io.emit("receive-msg", data);
-    socket.broadcast.emit("receive-msg", data);
+    // socket.broadcast.emit("receive-msg", data);
+    // socket.broadcast.emit("receive-msg", { message, Room });
+    socket.to(Room).emit("receive-msg", { message, Room });
   });
 
   socket.on("disconnect", () => {
     console.log("User disconnected", socket.id);
+  });
+
+  socket.on("join-room", (room) => {
+    socket.join(room);
   });
 });
 
